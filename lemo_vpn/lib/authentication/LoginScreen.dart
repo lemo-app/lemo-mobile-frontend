@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import 'ForgetPassword.dart';
 import 'SignUpScreen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -128,10 +129,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     onTap: () {
                       print('Forgot Password tapped!');
                       // Add navigation to reset password screen here
-                      // Navigator.pushReplacement(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()),
-                      // );
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()),
+                      );
                     },
                     child: Text(
                       'Forgot Password?',
