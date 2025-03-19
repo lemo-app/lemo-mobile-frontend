@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../authentication/LoginScreen.dart';
+
 class IntroSliderScreen extends StatefulWidget {
   const IntroSliderScreen({super.key});
 
@@ -28,10 +30,10 @@ class _IntroSliderScreenState extends State<IntroSliderScreen> {
       );
     }else{
       // Navigate to NextScreen when last image is reached
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => Loginpage()),
-      // );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+      );
     }
   }
 
