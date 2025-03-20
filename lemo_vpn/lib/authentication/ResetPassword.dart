@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lemo_vpn/authentication/LoginScreen.dart';
 
+import '../conecttoschool/ConnectToSchoolScanQR.dart';
+
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key});
 
@@ -21,6 +23,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     if (_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Password has been reset successfully!")),
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ScanToConnectSchool()),
       );
     }
   }
