@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import '../repository/authRepository.dart';
 import 'ForgetPassword.dart';
 import 'SignUpScreen.dart';
 
@@ -17,6 +18,34 @@ class _LoginScreenState extends State<LoginScreen> {
   String _email = '';
   String _password = '';
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
+  final AuthRepository _authRepository = AuthRepository();
+
+  void _handleSignIn() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final studentId = _email;
+    final password = _password;
+
+    final success = await _authRepository.signIn(studentId, password);
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (success && mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Login Failed!")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         print('Email: $_email, Password: $_password');
-
+                        _handleSignIn();
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -162,7 +191,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(20), // Circular corners
                       ),
                     ),
-                    child: const Text(
+                    child: _isLoading ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    ) :const Text(
                       'Sign In',
                       style: TextStyle(fontSize: 18),
                     ),
