@@ -69,6 +69,7 @@ flutter:
     - assets/girl_and_boy.png
     - assets/qr_code.png
     - assets/hand.png
+    - assets/school_logo.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

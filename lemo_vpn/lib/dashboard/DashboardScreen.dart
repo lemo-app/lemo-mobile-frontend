@@ -52,35 +52,86 @@ class _DashboardscreenState extends State<Dashboardscreen> {
               SizedBox(height: 20),
               // School Status Card
               Container(
-                padding: EdgeInsets.all(15),
+                padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.purple.shade200,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(40),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Row(
-                      children: [
-                        Icon(Icons.school, color: Colors.white, size: 20),
-                        SizedBox(width: 8),
-                        Text(
-                          "ST. Thomas' Moorside",
-                          style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                      ],
+                    // Circular Avatar (Left Side)
+                    CircleAvatar(
+                      radius: 25, // Adjust size as needed
+                      backgroundColor: Colors.white, // Background color
+                      backgroundImage: AssetImage("assets/school_logo.png"), // Replace with actual image
                     ),
-                    SizedBox(height: 5),
-                    Text(
-                      "Status: School starts in 15 mins",
-                      style: TextStyle(fontSize: 14, color: Colors.white70),
+                    SizedBox(width: 12), // Space between avatar and text
+
+                    // Column with School Name and Status
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // School Name Row with Icon
+                          Row(
+                            children: [
+                              Icon(Icons.school, color: Colors.white, size: 20),
+                              SizedBox(width: 8),
+                              Text(
+                                "ST. Thomas' Moorside",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 5),
+
+                          // School Status Text
+                          Text(
+                            "Status: School starts in 15 mins",
+                            style: TextStyle(fontSize: 14, color: Colors.white70),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
+              // Container(
+              //   padding: EdgeInsets.all(20),
+              //   decoration: BoxDecoration(
+              //     color: Colors.purple.shade200,
+              //     borderRadius: BorderRadius.circular(40),
+              //   ),
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: [
+              //       Row(
+              //         children: [
+              //           Icon(Icons.school, color: Colors.white, size: 20),
+              //           SizedBox(width: 8),
+              //           Text(
+              //             "ST. Thomas' Moorside",
+              //             style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+              //           ),
+              //         ],
+              //       ),
+              //       SizedBox(height: 5),
+              //       Text(
+              //         "Status: School starts in 15 mins",
+              //         style: TextStyle(fontSize: 14, color: Colors.white70),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               SizedBox(height: 30),
               // Learn Mode Button
               Stack(
+                clipBehavior: Clip.none, // Ensure children can go outside
                 alignment: Alignment.center,
                 children: [
                   Container(
@@ -89,7 +140,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.grey.shade300,
-                      border: Border.all(color: Colors.black12, width: 2),
+                      border: Border.all(color: Colors.purpleAccent.shade200, width: 2),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -105,9 +156,9 @@ class _DashboardscreenState extends State<Dashboardscreen> {
                     ),
                   ),
                   Positioned(
-                    right: -10,
+                    right: -50,
                     bottom: -10,
-                    child: Image.asset("assets/hand.png", width: 50), // Replace with actual image asset
+                    child: Image.asset("assets/hand.png", width: 70), // Replace with actual image asset
                   ),
                 ],
               ),
