@@ -22,16 +22,26 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
   }
 
-
   Future<void> _checkAuthAndNavigate() async {
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3)); // Show splash for 3 seconds
 
     if (!mounted) return;
 
     final prefs = await SharedPreferences.getInstance();
+    final bool isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true; // Default to true if not set
     final token = prefs.getString('token');
 
-    if (token != null) {
+    if (isFirstLaunch) {
+      // First time launching, show IntroSlider and update flag
+      await prefs.setBool('isFirstLaunch', false);
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const IntroSliderScreen()),
+        );
+      }
+    } else if (token != null) {
+      // If user is logged in, go to Dashboard
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -39,14 +49,41 @@ class _SplashScreenState extends State<SplashScreen> {
         );
       }
     } else {
+      // Otherwise, go to Login Screen
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const SplashScreen()),
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
         );
       }
     }
   }
+
+
+  // Future<void> _checkAuthAndNavigate() async {
+  //   await Future.delayed(const Duration(seconds: 3));
+  //
+  //   if (!mounted) return;
+  //
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final token = prefs.getString('token');
+  //
+  //   if (token != null) {
+  //     if (mounted) {
+  //       Navigator.pushReplacement(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => const Dashboardscreen()),
+  //       );
+  //     }
+  //   } else {
+  //     if (mounted) {
+  //       Navigator.pushReplacement(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => const LoginScreen()),
+  //       );
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

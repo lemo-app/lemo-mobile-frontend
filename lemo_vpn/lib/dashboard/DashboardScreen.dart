@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../settingsscreen/SettingsPage.dart';
+
 class Dashboardscreen extends StatefulWidget {
   const Dashboardscreen({super.key});
 
@@ -25,10 +27,10 @@ class _DashboardscreenState extends State<Dashboardscreen> {
                     icon: Icon(Icons.settings, color: Colors.purple, size: 30),
                     onPressed: () {
                       //Go to settings page
-                      // Navigator.pushReplacement(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => const Settingspage()),
-                      // );
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Settingspage()),
+                      );
                     },
                   ),
 
