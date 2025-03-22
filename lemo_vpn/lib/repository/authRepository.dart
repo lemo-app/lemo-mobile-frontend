@@ -18,9 +18,9 @@ class AuthRepository {
     );
 
     print("Data: ${emailId} ${password}");
-    print("Response: ${response}");
+    print("Response: ${response!.data}");
 
-    //if (response != null && response.data['status'] == 'success') {
+    if (response!.statusCode == 200) {
       // final prefs = await SharedPreferences.getInstance();
       // final user = response.data['response']['user'];
       // final token = response.data['response']['token'];
@@ -33,8 +33,8 @@ class AuthRepository {
       // await prefs.setInt('expires', expires);
       // await prefs.setString('email', email);
 
-     // return true;
-    //}
+     return true;
+    }
     return false;
   }
 }
