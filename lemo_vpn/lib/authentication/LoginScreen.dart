@@ -26,10 +26,10 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = true;
     });
 
-    final studentId = _email;
+    final emailId = _email;
     final password = _password;
 
-    final success = await _authRepository.signIn(studentId, password);
+    final success = await _authRepository.signIn(emailId, password);
 
     setState(() {
       _isLoading = false;

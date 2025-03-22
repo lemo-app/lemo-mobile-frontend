@@ -6,35 +6,35 @@ import '../services/dataProvider.dart';
 class AuthRepository {
   final DataProvider _dataProvider = DataProvider();
 
-  Future<bool> signIn(String studentId, String password) async {
+  Future<bool> signIn(String emailId, String password) async {
     final response = await _dataProvider.fetchData(
       'POST',
-      'https://api.ohanapay.app/version-test/api/1.1/wf/lemo-login',
+      'http://127.0.0.1:3001/auth/login',
       data: {
-        'student_id': studentId,
+        'email': emailId,
         'password': password,
       },
       header: {'Content-Type': 'application/json'},
     );
 
-    print("Data: ${studentId} ${password}");
-    print("Response: ${response!.data}");
+    print("Data: ${emailId} ${password}");
+    print("Response: ${response}");
 
-    if (response != null && response.data['status'] == 'success') {
-      final prefs = await SharedPreferences.getInstance();
-      final user = response.data['response']['user'];
-      final token = response.data['response']['token'];
-      final userId = response.data['response']['user_id'];
-      final expires = response.data['response']['expires'];
-      final email = user['authentication']['email']['email'];
+    //if (response != null && response.data['status'] == 'success') {
+      // final prefs = await SharedPreferences.getInstance();
+      // final user = response.data['response']['user'];
+      // final token = response.data['response']['token'];
+      // final userId = response.data['response']['user_id'];
+      // final expires = response.data['response']['expires'];
+      // final email = user['authentication']['email']['email'];
+      //
+      // await prefs.setString('token', token);
+      // await prefs.setString('user_id', userId);
+      // await prefs.setInt('expires', expires);
+      // await prefs.setString('email', email);
 
-      await prefs.setString('token', token);
-      await prefs.setString('user_id', userId);
-      await prefs.setInt('expires', expires);
-      await prefs.setString('email', email);
-
-      return true;
-    }
+     // return true;
+    //}
     return false;
   }
 }
