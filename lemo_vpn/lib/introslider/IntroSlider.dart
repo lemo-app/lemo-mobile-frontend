@@ -40,7 +40,9 @@ class _IntroSliderScreenState extends State<IntroSliderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
+      backgroundColor: isDarkMode ? Colors.grey[900] : Colors.white,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -83,7 +85,7 @@ class _IntroSliderScreenState extends State<IntroSliderScreen> {
             style: TextStyle(
               fontSize: 26,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: isDarkMode ? Colors.white : Colors.black,
             ),
           ),
           SizedBox(height: 15),
@@ -92,7 +94,7 @@ class _IntroSliderScreenState extends State<IntroSliderScreen> {
             child: Text(
               "This app helps students stay focused on their studies by minimizing distractions and providing a secure environment.",
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+              style: TextStyle(fontSize: 16, color: isDarkMode ? Colors.white : Colors.black,),
             ),
           ),
           SizedBox(height: 30),
