@@ -242,6 +242,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import '../repository/authRepository.dart';
 import 'LoginScreen.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -255,7 +256,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   String _fullName = '';
   String _email = '';
-  String? _selectedUserType;
+  String _selectedUserType = "student";
+  bool _isLoading = false;
+  final AuthRepository _authRepository = AuthRepository();
 
   final List<String> _userTypes = [
     'admin',
@@ -263,6 +266,121 @@ class _SignUpScreenState extends State<SignUpScreen> {
     'school_manager',
     'student'
   ];
+
+  void _handleSignUp() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final emailId = _email;
+    final userType = _selectedUserType;
+
+    final success = await _authRepository.signUp(emailId, userType);
+    print("Sucess: ${success}");
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (success && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Sign Up Successfull!")),
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+    }else{
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text("Login Failed!")),
+      // );
+      _showWarningDialog(context);
+    }
+  }
+
+  void _showWarningDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Row with Icon on Left & Text on Right
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Warning Icon (Left Side)
+                    Icon(
+                      Icons.error_outline,
+                      size: 40,
+                      color: Colors.red,
+                    ),
+                    const SizedBox(width: 10),
+
+                    // Warning Title & Message (Right Side)
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Warning!",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          const Text(
+                            "Invalid Username Or Password Check Them Correctly.",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(fontSize: 16, color: Colors.black54),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // "Okay" Button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close Dialog
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    child: const Text(
+                      "Okay",
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -378,7 +496,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     }).toList(),
                     onChanged: (value) {
                       setState(() {
-                        _selectedUserType = value;
+                        _selectedUserType = value!;
                       });
                     },
                     validator: (value) {
@@ -398,6 +516,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         if (_formKey.currentState!.validate()) {
                           print('Name: $_fullName, Email: $_email, UserType: $_selectedUserType');
                           // Navigate to next screen
+                          _handleSignUp();
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -408,7 +527,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           borderRadius: BorderRadius.circular(20), // Circular corners
                         ),
                       ),
-                      child: const Text(
+                      child: _isLoading ? const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      ):const Text(
                         'Sign Up',
                         style: TextStyle(fontSize: 18),
                       ),
