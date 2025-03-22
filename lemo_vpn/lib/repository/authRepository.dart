@@ -21,17 +21,14 @@ class AuthRepository {
     print("Response: ${response!.data}");
 
     if (response!.statusCode == 200) {
-      // final prefs = await SharedPreferences.getInstance();
-      // final user = response.data['response']['user'];
-      // final token = response.data['response']['token'];
-      // final userId = response.data['response']['user_id'];
-      // final expires = response.data['response']['expires'];
-      // final email = user['authentication']['email']['email'];
-      //
-      // await prefs.setString('token', token);
-      // await prefs.setString('user_id', userId);
-      // await prefs.setInt('expires', expires);
-      // await prefs.setString('email', email);
+      final prefs = await SharedPreferences.getInstance();
+      final token = response.data['token'];
+      final userId = response.data['userId'];
+      final email = response.data['email'];
+
+      await prefs.setString('token', token);
+      await prefs.setString('userId', userId);
+      await prefs.setString('email', email);
 
      return true;
     }
