@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import '../dashboard/DashboardScreen.dart';
 import '../repository/authRepository.dart';
 import 'ForgetPassword.dart';
 import 'SignUpScreen.dart';
@@ -39,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (success && mounted) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(builder: (context) => const Dashboardscreen()),
       );
     }else{
       // ScaffoldMessenger.of(context).showSnackBar(

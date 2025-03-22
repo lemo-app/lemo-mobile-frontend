@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:lemo_vpn/authentication/LoginScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../dashboard/DashboardScreen.dart';
+import '../profilescreen/ProfileScreen.dart';
+
 
 class Settingspage extends StatefulWidget {
   const Settingspage({super.key});
@@ -33,7 +36,10 @@ class _SettingspageState extends State<Settingspage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _circularButton(Icons.chevron_left, () {
-                    Navigator.pop(context);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Dashboardscreen()),
+                    );
                   }),
                   Text(
                     "Settings",
@@ -129,10 +135,10 @@ class _SettingspageState extends State<Settingspage> {
           onTap: () {
             // Navigate to respective screen
             if(title == "My Profile"){
-              // Navigator.pushReplacement(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => const Profilescreen()),
-              // );
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const Profilescreen()),
+              );
             }
           },
           child: Padding(

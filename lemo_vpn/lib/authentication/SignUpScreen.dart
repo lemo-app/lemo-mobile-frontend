@@ -37,7 +37,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   SizedBox(height: 50,),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pop(context); // Go back to previous screen
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LoginScreen()),
+                      ); // Go back to previous screen
                     },
                     child: Container(
                       width: 40,
