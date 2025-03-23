@@ -60,6 +60,29 @@ class AuthRepository {
     print("Data: ${emailId} ${userType}");
     print("Response: ${response!.data}");
     // Check if signup was successful based on response status
+    if (response!.data["status"] == "success"){
+      await sendEmail(emailId,response!.data["message"],response!.data["verificationEmail"]);
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> sendEmail(String emailId, String subject, String body) async {
+    // Make POST request to signup endpoint using DataProvider
+    final response = await _dataProvider.fetchData(
+      'POST',
+      'http://127.0.0.1:3001/email/send',
+      data: {
+        'to': emailId,
+        'subject': subject,
+        'body': body,
+      },
+      header: {'Content-Type': 'application/json'},
+    );
+
+    print("Data: ${emailId} ${subject} ${body}");
+    print("Response: ${response!.data}");
+    // Check if signup was successful based on response status
     if (response!.data["status"] == "success") {
       // final prefs = await SharedPreferences.getInstance();
       // final token = response.data['token'];
