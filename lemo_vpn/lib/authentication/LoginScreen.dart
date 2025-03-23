@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../dashboard/DashboardScreen.dart';
+import '../introslider/IntroSlider.dart';
 import '../repository/authRepository.dart';
 import '../utils/AlertDiaglogs.dart';
 import 'ForgetPassword.dart';
@@ -87,7 +88,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 50,),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pop(context); // Go back to previous screen
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => IntroSliderScreen()),
+                    ); // Go back to previous screen
                   },
                   child: Container(
                     width: 40,
@@ -215,11 +219,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(20), // Circular corners
                       ),
                     ),
-                    child: _isLoading ? const SizedBox(
+                    child: _isLoading ?  SizedBox(
                       width: 24,
                       height: 24,
                       child: CircularProgressIndicator(
-                        color: Colors.white,
+                        color: isDarkMode ? Colors.black : Colors.white,
                         strokeWidth: 2,
                       ),
                     ) :const Text(

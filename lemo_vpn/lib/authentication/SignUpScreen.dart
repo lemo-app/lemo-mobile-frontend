@@ -527,11 +527,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           borderRadius: BorderRadius.circular(20), // Circular corners
                         ),
                       ),
-                      child: _isLoading ? const SizedBox(
+                      child: _isLoading ? SizedBox(
                         width: 24,
                         height: 24,
                         child: CircularProgressIndicator(
-                          color: Colors.white,
+                          color: isDarkMode ? Colors.black : Colors.white,
                           strokeWidth: 2,
                         ),
                       ):const Text(

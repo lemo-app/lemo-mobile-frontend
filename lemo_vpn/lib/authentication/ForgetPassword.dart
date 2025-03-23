@@ -32,8 +32,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24),
@@ -63,7 +63,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               // Title
               Text(
                 "Forget Password",
-                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.black),
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: isDarkMode ? Colors.white :Colors.black),
               ),
               SizedBox(height: 10),
               // Email Input Field
@@ -115,7 +115,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   child: RichText(
                     text: TextSpan(
                       text: "Remember password? ",
-                      style: TextStyle(fontSize: 16, color: Colors.black87),
+                      style: TextStyle(fontSize: 16, color: isDarkMode ? Colors.white : Colors.black87),
                       children: [
                         TextSpan(
                           text: "Sign in",
