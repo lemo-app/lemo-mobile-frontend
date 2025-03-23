@@ -30,24 +30,36 @@ class _LoginScreenState extends State<LoginScreen> {
     final emailId = _email;
     final password = _password;
 
-    final success = await _authRepository.signIn(emailId, password);
-    print("Sucess: ${success}");
-
-    setState(() {
-      _isLoading = false;
-    });
-
-    if (success && mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const Dashboardscreen()),
+    if(_password.length > 18){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("First User")),
       );
+      setState(() {
+        _isLoading = false;
+      });
+
     }else{
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(content: Text("Login Failed!")),
-      // );
-      _showWarningDialog(context);
+      final success = await _authRepository.signIn(emailId, password);
+      print("Sucess: ${success}");
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (success && mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Dashboardscreen()),
+        );
+      }else{
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text("Login Failed!")),
+        // );
+        _showWarningDialog(context);
+      }
     }
+
+
   }
 
   void _showWarningDialog(BuildContext context) {
