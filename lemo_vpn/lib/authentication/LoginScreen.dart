@@ -5,6 +5,7 @@ import '../dashboard/DashboardScreen.dart';
 import '../repository/authRepository.dart';
 import '../utils/AlertDiaglogs.dart';
 import 'ForgetPassword.dart';
+import 'ResetPasswordFirstLoginScreen.dart';
 import 'SignUpScreen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -38,6 +39,10 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         _isLoading = false;
       });
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => ResetPasswordFirstLogInScreen(email:emailId,tempassword: password,)),
+      );
 
     }else{
       final success = await _authRepository.signIn(emailId, password);
