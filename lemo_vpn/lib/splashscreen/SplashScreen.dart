@@ -1,9 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../authentication/LoginScreen.dart';
-import '../dashboard/DashboardScreen.dart';
 import '../introslider/IntroSlider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -18,77 +15,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    _checkAuthAndNavigate();
     super.initState();
   }
-
-  Future<void> _checkAuthAndNavigate() async {
-    await Future.delayed(const Duration(seconds: 3)); // Show splash for 3 seconds
-
-    if (!mounted) return;
-
-    final prefs = await SharedPreferences.getInstance();
-    final bool isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true; // Default to true if not set
-    final token = prefs.getString('token');
-
-    if (isFirstLaunch) {
-      // First time launching, show IntroSlider and update flag
-      await prefs.setBool('isFirstLaunch', false);
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const IntroSliderScreen()),
-        );
-      }
-    } else if (token != null) {
-      // If user is logged in, go to Dashboard
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const Dashboardscreen()),
-        );
-      }
-    } else {
-      // Otherwise, go to Login Screen
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()),
-        );
-      }
-    }
-  }
-
-
-  // Future<void> _checkAuthAndNavigate() async {
-  //   await Future.delayed(const Duration(seconds: 3));
-  //
-  //   if (!mounted) return;
-  //
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final token = prefs.getString('token');
-  //
-  //   if (token != null) {
-  //     if (mounted) {
-  //       Navigator.pushReplacement(
-  //         context,
-  //         MaterialPageRoute(builder: (context) => const Dashboardscreen()),
-  //       );
-  //     }
-  //   } else {
-  //     if (mounted) {
-  //       Navigator.pushReplacement(
-  //         context,
-  //         MaterialPageRoute(builder: (context) => const LoginScreen()),
-  //       );
-  //     }
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: isDarkMode ? Colors.grey[900] : Colors.white,
       body: SafeArea(
@@ -96,26 +30,85 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             // App Icon in the middle
             Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  Image.asset(
-                    'assets/usershield.png',
-                    width: 150,
-                    height: 150,
+                  // Faded Background Image
+                  Positioned(
+                    top: screenHeight * .05, // Adjust positioning
+                    child:  Opacity(
+                      opacity: 0.2, // Adjust opacity for fade effect
+                      child: Image.asset(
+                        'assets/background.png', // Replace with your background image
+                        width: screenWidth * 1.25,
+                        height: screenHeight * 0.65,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
-                  Text(
-                    'LEMO',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: isDarkMode ? Colors.white : Colors.black,
+                  // Foreground Image (Shield)
+                  Positioned(
+                    top: 220, // Adjust positioning
+                    child: Image.asset(
+                      'assets/usershield.png',
+                      width: 120,
+                      height: 120,
+                    ),
+                  ),
+
+                  // Text Positioned Below the Shield
+                  Positioned(
+                    top: 320, // Adjust this value to move text closer or farther
+                    child: Text(
+                      'LEMO',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: isDarkMode ? Colors.white : Colors.black,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            // Checkbox, Policy Text, and Button
+            // Center(
+            //   child: Stack(
+            //     alignment: Alignment.center, // Centers both images
+            //     children: [
+            //       // Background Image
+            //       Opacity(
+            //         opacity: 0.2,
+            //         child: Image.asset(
+            //           'assets/background.png', // Replace with your background image
+            //           width: 600, // Adjust size as needed
+            //           height: 500,
+            //           fit: BoxFit.cover,
+            //         ),
+            //       ),
+            //
+            //       // Foreground Image and Text
+            //       Column(
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         children: [
+            //           Image.asset(
+            //             'assets/usershield.png',
+            //             width: 150,
+            //             height: 150,
+            //           ),
+            //           Text(
+            //             'LEMO',
+            //             style: TextStyle(
+            //               fontSize: 24,
+            //               fontWeight: FontWeight.bold,
+            //               color: isDarkMode ? Colors.white : Colors.black,
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ],
+            //   ),
+            // ),
+
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
