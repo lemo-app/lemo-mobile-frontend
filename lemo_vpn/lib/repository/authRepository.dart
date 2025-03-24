@@ -98,4 +98,33 @@ class AuthRepository {
     }
     return false;
   }
+
+  Future<bool> veryFyEmail(String emailId, String tempPassword, String newPassword, String confirmPassword) async {
+    final response = await _dataProvider.fetchData(
+      'POST',
+      'http://127.0.0.1:3001/verify-email',
+      data: {
+        'email': emailId,
+        'temp_password': tempPassword,
+        'new_password' : newPassword,
+        'new_password_confirm' : confirmPassword,
+      },
+      header: {'Content-Type': 'application/json'},
+    );
+
+    print("Data: ${emailId} ${tempPassword} ${newPassword} ${confirmPassword}");
+    print("Response: ${response!.data}");
+    print("StatusCode: ${response!.statusCode}");
+    // Check if signup was successful based on response status
+    if (response!.statusCode == 200){
+      final res = await signIn(emailId,newPassword);
+      if(res == "true"){
+        return true;
+      }else{
+        return false;
+      }
+    }
+    return false;
+  }
+
 }

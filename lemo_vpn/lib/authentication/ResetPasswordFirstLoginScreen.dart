@@ -183,6 +183,9 @@
 
 import 'package:flutter/material.dart';
 
+import '../dashboard/DashboardScreen.dart';
+import '../repository/authRepository.dart';
+import '../utils/AlertDiaglogs.dart';
 import 'LoginScreen.dart';
 
 class ResetPasswordFirstLogInScreen extends StatefulWidget {
@@ -204,6 +207,9 @@ class _ResetPasswordFirstLogInScreenState extends State<ResetPasswordFirstLogInS
 
   final FocusNode newPasswordFocus = FocusNode();
   final FocusNode confirmPasswordFocus = FocusNode();
+
+  bool _isLoading = false;
+  final AuthRepository _authRepository = AuthRepository();
 
   @override
   void initState() {
@@ -235,13 +241,38 @@ class _ResetPasswordFirstLogInScreenState extends State<ResetPasswordFirstLogInS
     return null;
   }
 
-  void handleSignIn() {
-    if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Password reset successful!')),
+  void _handleSignIn() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final emailId = widget.email;
+    final tempassword = widget.tempassword;
+    final newpass = newPasswordController.text.toString().trim();
+    final confirmpass = confirmPasswordController.text.toString().trim();
+
+    print("All Data ${emailId} ${tempassword} ${newpass} ${confirmpass}");
+
+    final success = await _authRepository.veryFyEmail(emailId, tempassword,newpass,confirmpass);
+
+    if(success  && mounted){
+      setState(() {
+        _isLoading = false;
+      });
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Dashboardscreen()),
       );
-      // TODO: Implement password reset API call
+
+    }else{
+      setState(() {
+        _isLoading = false;
+      });
+      DiaglogUtils.showWarningDialog(context);
     }
+
+
   }
 
   @override
@@ -334,7 +365,7 @@ class _ResetPasswordFirstLogInScreenState extends State<ResetPasswordFirstLogInS
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: handleSignIn,
+                          onPressed: _handleSignIn,
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 15),
                             shape: RoundedRectangleBorder(
@@ -342,7 +373,14 @@ class _ResetPasswordFirstLogInScreenState extends State<ResetPasswordFirstLogInS
                             ),
                             backgroundColor: Colors.blueAccent,
                           ),
-                          child: const Text("Sign In", style: TextStyle(fontSize: 16, color: Colors.white)),
+                          child: _isLoading ? SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              color: isDarkMode ? Colors.black : Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          ) : Text("Sign In", style: TextStyle(fontSize: 16, color: Colors.white)),
                         ),
                       ),
                     ],
