@@ -33,37 +33,36 @@ class _LoginScreenState extends State<LoginScreen> {
     final emailId = _email;
     final password = _password;
 
-    if(_password.length > 18){
+    final success = await _authRepository.signIn(emailId, password);
+
+    if(success == "Error logging in: User not verified. Please verify your email before logging in" && mounted){
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("First User")),
       );
       setState(() {
         _isLoading = false;
       });
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => ResetPasswordFirstLogInScreen(email:emailId,tempassword: password,)),
       );
 
-    }else{
-      final success = await _authRepository.signIn(emailId, password);
-      print("Sucess: ${success}");
+    }else if(success == "true" && mounted){
 
       setState(() {
         _isLoading = false;
       });
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Dashboardscreen()),
+      );
 
-      if (success && mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const Dashboardscreen()),
-        );
-      }else{
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(content: Text("Login Failed!")),
-        // );
-        DiaglogUtils.showWarningDialog(context);
-      }
+    }else{
+      setState(() {
+        _isLoading = false;
+      });
+      DiaglogUtils.showWarningDialog(context);
     }
 
 

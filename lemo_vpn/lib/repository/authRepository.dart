@@ -10,7 +10,7 @@ class AuthRepository {
 
   // Sign-in method that takes email and password as parameters
   // Returns Future<bool> indicating success/failure
-  Future<bool> signIn(String emailId, String password) async {
+  Future<String> signIn(String emailId, String password) async {
     // Make POST request to login endpoint using DataProvider
     final response = await _dataProvider.fetchData(
       'POST',
@@ -24,6 +24,7 @@ class AuthRepository {
 
     print("Data: ${emailId} ${password}");
     print("Response: ${response!.data}");
+    print("Status: ${response!.statusCode}");
 
     // Check if request was successful (HTTP 200 OK)
     if (response!.statusCode == 200) {
@@ -38,9 +39,9 @@ class AuthRepository {
       await prefs.setString('userId', userId);
       await prefs.setString('email', email);
 
-     return true;
+     return "true";
     }
-    return false;
+    return response!.data;
   }
 
   // Sign-up method that takes email and user type as parameters
