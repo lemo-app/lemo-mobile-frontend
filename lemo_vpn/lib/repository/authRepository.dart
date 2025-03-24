@@ -7,6 +7,8 @@ import '../services/dataProvider.dart';
 class AuthRepository {
   // Private instance of DataProvider for making HTTP requests
   final DataProvider _dataProvider = DataProvider();
+  //static final String ip = "http://127.0.0.1:3001/";
+  static final String ip = "http://192.168.68.118:3001/";
 
   // Sign-in method that takes email and password as parameters
   // Returns Future<bool> indicating success/failure
@@ -14,7 +16,7 @@ class AuthRepository {
     // Make POST request to login endpoint using DataProvider
     final response = await _dataProvider.fetchData(
       'POST',
-      'http://127.0.0.1:3001/auth/login',
+      '${ip}auth/login',
       data: {
         'email': emailId,
         'password': password,
@@ -50,7 +52,7 @@ class AuthRepository {
     // Make POST request to signup endpoint using DataProvider
     final response = await _dataProvider.fetchData(
       'POST',
-      'http://127.0.0.1:3001/auth/signup',
+      '${ip}auth/signup',
       data: {
         'email': emailId,
         'type': userType,
@@ -72,7 +74,7 @@ class AuthRepository {
     // Make POST request to signup endpoint using DataProvider
     final response = await _dataProvider.fetchData(
       'POST',
-      'http://127.0.0.1:3001/email/send',
+      '${ip}email/send',
       data: {
         'to': emailId,
         'subject': subject,
@@ -102,7 +104,7 @@ class AuthRepository {
   Future<bool> veryFyEmail(String emailId, String tempPassword, String newPassword, String confirmPassword) async {
     final response = await _dataProvider.fetchData(
       'POST',
-      'http://127.0.0.1:3001/verify-email',
+      '${ip}verify-email',
       data: {
         'email': emailId,
         'temp_password': tempPassword,
