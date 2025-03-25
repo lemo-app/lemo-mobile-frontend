@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../conecttoschool/ConnectToSchoolScanQR.dart';
 import '../settingsscreen/SettingsPage.dart';
 
 class Dashboardscreen extends StatefulWidget {
@@ -135,25 +136,33 @@ class _DashboardscreenState extends State<Dashboardscreen> {
                 clipBehavior: Clip.none, // Ensure children can go outside
                 alignment: Alignment.center,
                 children: [
-                  Container(
-                    width: 120,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.grey.shade300,
-                      border: Border.all(color: Colors.purpleAccent.shade200, width: 2),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.security, size: 40, color: Colors.black),
-                        SizedBox(height: 5),
-                        Text(
-                          "Activate Learn Mode",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                        ),
-                      ],
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => ScanToConnectSchool()),
+                      );
+                    },
+                    child: Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.grey.shade300,
+                        border: Border.all(color: Colors.purpleAccent.shade200, width: 2),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.security, size: 40, color: Colors.black),
+                          SizedBox(height: 5),
+                          Text(
+                            "Activate Learn Mode",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Positioned(
