@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../conecttoschool/ConnectToSchoolScanQR.dart';
+import '../provider/LearningModeProvider.dart';
 import '../settingsscreen/SettingsPage.dart';
 
 class Dashboardscreen extends StatefulWidget {
@@ -11,8 +13,18 @@ class Dashboardscreen extends StatefulWidget {
 }
 
 class _DashboardscreenState extends State<Dashboardscreen> {
+
+
   @override
   Widget build(BuildContext context) {
+    final learningModeProvider = Provider.of<LearningModeProvider>(context);
+    // Format the time in HH:MM:SS format
+    String formatTime(int seconds) {
+      int hours = seconds ~/ 3600; // Calculate hours
+      int minutes = (seconds % 3600) ~/ 60; // Calculate minutes
+      int secs = seconds % 60; // Calculate seconds
+      return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
+    }
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -157,7 +169,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
                           Icon(Icons.security, size: 40, color: Colors.black),
                           SizedBox(height: 5),
                           Text(
-                            "Activate Learn Mode",
+                            learningModeProvider.isLearningModeActive ? "Deactivate Learning Mode": "Activate Learn Mode",
                             textAlign: TextAlign.center,
                             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                           ),
@@ -181,7 +193,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
               SizedBox(height: 10),
               // Timer Text
               Text(
-                "00:00:00",
+                formatTime(learningModeProvider.elapsedSeconds),
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
             ],
