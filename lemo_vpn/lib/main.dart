@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:lemo_vpn/provider/LearningModeProvider.dart';
 import 'package:lemo_vpn/splashscreen/AppSplash.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => LearningModeProvider()),
+      ],
+      child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

@@ -159,8 +159,15 @@
 //   }
 // }
 
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:provider/provider.dart';
+import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
+
+import '../dashboard/DashboardScreen.dart';
+import '../provider/LearningModeProvider.dart';
 
 class QRScannerScreen extends StatefulWidget {
   const QRScannerScreen({super.key});
@@ -170,83 +177,115 @@ class QRScannerScreen extends StatefulWidget {
 }
 
 class _QRScannerScreenState extends State<QRScannerScreen> {
-  String? scannedData;
-  bool isScanned = false;
 
-  void onDetect(BarcodeCapture capture) {
-    if (!isScanned && capture.barcodes.isNotEmpty) {
-      setState(() {
-        scannedData = capture.barcodes.first.rawValue;
-        isScanned = true;
-      });
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  Barcode? result;
+  QRViewController? controller;
+
+  // In order to get hot reload to work we need to pause the camera if the platform
+  // is android, or resume the camera if the platform is iOS.
+  @override
+  void reassemble() {
+    super.reassemble();
+    if (Platform.isAndroid) {
+      controller!.pauseCamera();
+    } else if (Platform.isIOS) {
+      controller!.resumeCamera();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          MobileScanner(
-            onDetect: onDetect,
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            flex: 5,
+            child: QRView(
+              key: qrKey,
+              onQRViewCreated: _onQRViewCreated,
+            ),
           ),
-          if (scannedData != null) _buildBottomNavigation(),
-          _buildScannerOverlay(),
+          // Expanded(
+          //   flex: 1,
+          //   child: Center(
+          //     child: (result != null)
+          //         ? Text(
+          //         'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
+          //         : Text('Scan a code'),
+          //   ),
+          // )
         ],
       ),
     );
   }
 
-  Widget _buildScannerOverlay() {
-    return Align(
-      alignment: Alignment.center,
-      child: Container(
-        width: 250,
-        height: 250,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.greenAccent, width: 4),
-          borderRadius: BorderRadius.circular(16),
-        ),
-      ),
-    );
+  void _onQRViewCreated(QRViewController controller) {
+    this.controller = controller;
+    controller.scannedDataStream.listen((scanData) {
+      setState(() {
+        result = scanData;
+      });
+      if(result != null){
+        _showBottomSheet(context, result!.code!);
+      }
+    });
   }
 
-  Widget _buildBottomNavigation() {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        height: 200,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.black87,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-        ),
+  // Function to display the BottomSheet
+  void _showBottomSheet(BuildContext context, String scannedData) {
+    controller?.pauseCamera();
+    final learningModeProvider = Provider.of<LearningModeProvider>(context,listen: false);
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              "Scanned Result",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-            ),
-            const SizedBox(height: 10),
+            // Display Scanned QR Code Result
             Text(
-              scannedData ?? "",
-              style: const TextStyle(fontSize: 16, color: Colors.greenAccent),
-              textAlign: TextAlign.center,
+              'Scanned Data: $scannedData',
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  scannedData = null;
-                  isScanned = false;
-                });
-              },
-              child: const Text("Scan Again"),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Close BottomSheet
+                  },
+                  child: const Text('OK'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (learningModeProvider.isLearningModeActive) {
+                      learningModeProvider.stopLearningMode();
+                      learningModeProvider.resetLearningMode();
+                    } else {
+                      learningModeProvider.startLearningMode();
+                    }
+                    // Navigate to Dashboard Screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Dashboardscreen(),
+                      ),
+                    );
+                  },
+                  child: const Text('Next'),
+                ),
+              ],
             ),
           ],
         ),
-      ),
-    );
+      );
+    },
+    ).whenComplete((){
+      // Resume camera after BottomSheet is dismissed
+      controller?.resumeCamera();
+    });
   }
+
 }
