@@ -15,6 +15,8 @@ class Student {
   DateTime updatedAt;
   int v;
   String fullname;
+  String logoUrl;
+  String avaterURl;
 
   Student({
     this.id = '',
@@ -33,6 +35,8 @@ class Student {
     DateTime? updatedAt,
     this.v = 0,
     this.fullname = '',
+    this.logoUrl = '',
+    this.avaterURl = '',
   })  : createdAt = createdAt ?? DateTime.now(),
         updatedAt = updatedAt ?? DateTime.now();
 
@@ -54,7 +58,9 @@ class Student {
       createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : DateTime.now(),
       updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : DateTime.now(),
       v: json['__v'] ?? 0,
-      fullname: json['full_name'] ?? ''
+      fullname: json['full_name'] ?? '',
+      logoUrl: json['school']['logo_url'] ?? '',
+      avaterURl: json['avatar_url'] ?? ''
     );
   }
 
@@ -77,6 +83,8 @@ class Student {
       'updatedAt': updatedAt.toIso8601String(),
       '__v': v,
       'full_name':fullname,
+      'logo_url':logoUrl,
+      'avatar_url':avaterURl,
     };
   }
 

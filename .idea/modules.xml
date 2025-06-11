@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/lemo-mobile-frontend.iml" filepath="$PROJECT_DIR$/.idea/lemo-mobile-frontend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lemoios.iml" filepath="$PROJECT_DIR$/lemoios.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/lemoios_android.iml" filepath="$PROJECT_DIR$/android/lemoios_android.iml" />
     </modules>
   </component>
 </project>

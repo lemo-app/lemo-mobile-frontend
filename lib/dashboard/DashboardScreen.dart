@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:openvpn_flutter/openvpn_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,12 +30,12 @@ class _DashboardscreenState extends State<Dashboardscreen> {
   bool _isLoading = false;
   bool _isSchoolLoading= false;
   String _schoolName = "";
-
+  String _logoUrl = "";
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
     _getDashBoarsStudentInfo();
+    super.initState();
   }
 
   void _getDashBoarsStudentInfo()async{
@@ -46,7 +47,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
     print("Tocken ${token}");
     StudentDashboard? student = await _dashboardRepository.getDashboardSchoolInfo(token!);
     if (student != null) {
-      print('User Profile: ${student.email}, ${student.type}');
+      print('User Profile: ${student.email}');
       _getDashBoarsSchoolInfo();
       setState(() {
         _isLoading = false;
@@ -72,6 +73,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
       downloadAndSaveFile(school.vpnUrl);
       setState(() {
         _schoolName = school.schoolName;
+        _logoUrl = school.logoUrl;
         _isSchoolLoading = false;
       });
     } else {
@@ -82,38 +84,6 @@ class _DashboardscreenState extends State<Dashboardscreen> {
     }
   }
 
-  // Function to download file and save path
-  // Future<String?> downloadAndSaveFile(String url) async {
-  //   final Dio _dio = Dio();
-  //   try {
-  //     // Use a custom directory or temporary directory
-  //     // For this example, we'll use a temporary directory in the app's cache
-  //     final directory = await Directory.systemTemp.createTemp('downloads_');
-  //
-  //     // Create a file name
-  //     String fileName = url.split('/').last;
-  //     final filePath = '${directory.path}/$fileName';
-  //
-  //     // Download the file using Dio
-  //     await _dio.download(
-  //       url,
-  //       filePath,
-  //       onReceiveProgress: (received, total) {
-  //         if (total != -1) {
-  //           print('Progress: ${(received / total * 100).toStringAsFixed(0)}%');
-  //         }
-  //       },
-  //     );
-  //
-  //     // Save path to SharedPreferences
-  //     await _saveFilePath(filePath);
-  //
-  //     return filePath;
-  //   } catch (e) {
-  //     print('Error downloading file: $e');
-  //     return null;
-  //   }
-  // }
   Future<String?> downloadAndSaveFile(String url) async {
     final Dio _dio = Dio();
     try {
@@ -176,7 +146,16 @@ class _DashboardscreenState extends State<Dashboardscreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
+          child: _isLoading ? Center(
+            child: SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                color: isDarkMode ? Colors.white : Colors.black,
+                strokeWidth: 2,
+              ),
+            ),
+          ):Column(
             children: [
               // App Bar with Icons
               Row(
@@ -193,20 +172,20 @@ class _DashboardscreenState extends State<Dashboardscreen> {
                     },
                   ),
 
-                  GestureDetector(
-                    onTap: ()async{
-                      final prefs = await SharedPreferences.getInstance();
-                      final token = prefs.getString('dashboardSchoolId');
-                      final userId = prefs.getString('dashboardUserId');
-                      final userEmail = prefs.getString('dashboardEmail');
-                      final path = await getFilePath();
-                      print("School id: ${token}");
-                      print("user id: ${userId}");
-                      print("user email: ${userEmail}");
-                      print("Ovpn path: ${path}");
-
-                    },
-                      child: Icon(Icons.emoji_events, color: Colors.amber, size: 30)),
+                  // GestureDetector(
+                  //   onTap: ()async{
+                  //     final prefs = await SharedPreferences.getInstance();
+                  //     bool? isVpnConnected = prefs.getBool("isVpnConnected");
+                  //     print("IsVpnConnected: ${isVpnConnected}");
+                  //     ScaffoldMessenger.of(context).showSnackBar(
+                  //       SnackBar(
+                  //         content: Text('IsVpnConnected: ${isVpnConnected}'),
+                  //         backgroundColor: Colors.red,
+                  //         duration: Duration(seconds: 3),
+                  //       ),
+                  //     );
+                  //   },
+                  //     child: Icon(Icons.emoji_events, color: Colors.amber, size: 30)),
                 ],
               ),
               SizedBox(height: 20,),
@@ -236,10 +215,32 @@ class _DashboardscreenState extends State<Dashboardscreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     // Circular Avatar (Left Side)
-                    CircleAvatar(
-                      radius: 25, // Adjust size as needed
-                      backgroundColor: Colors.white, // Background color
-                      backgroundImage: AssetImage("assets/images/school_logo.png"), // Replace with actual image
+                    // CircleAvatar(
+                    //   radius: 25, // Adjust size as needed
+                    //   backgroundColor: Colors.white, // Background color
+                    //   backgroundImage: AssetImage("assets/images/school_logo.png"), // Replace with actual image
+                    // ),
+                    _logoUrl != "" ? CircleAvatar(
+                      radius: 25,
+                      backgroundImage: NetworkImage(_logoUrl),
+                    ): Container(
+                      width: 40, // 2 * radius (to match CircleAvatar's size)
+                      height: 40,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.grey[300], // Background color for the circle
+                      ),
+                      child: Center(
+                        child: Text(
+                          _schoolName.split(' ').map((name) => name.isNotEmpty ? name[0] : '').join(''), // Extracts "AS" from "Abrar School"
+                          style: TextStyle(
+                            fontSize: 24, // Larger font for initials
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black, // Text color
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
                     SizedBox(width: 12), // Space between avatar and text
 
@@ -280,52 +281,16 @@ class _DashboardscreenState extends State<Dashboardscreen> {
                           SizedBox(height: 5),
 
                           // School Status Text
-                          Text(
-                            "Status: School starts in 15 mins",
-                            style: TextStyle(fontSize: 14, color: Colors.white70),
-                            softWrap: true,  // Allows multiline wrapping
-                            overflow: TextOverflow.visible, // Prevents overflow cutting
-                          ),
+                          // Text(
+                          //   "Status: School starts in 15 mins",
+                          //   style: TextStyle(fontSize: 14, color: Colors.white70),
+                          //   softWrap: true,  // Allows multiline wrapping
+                          //   overflow: TextOverflow.visible, // Prevents overflow cutting
+                          // ),
                         ],
                       ),
                     ),
 
-                    // Expanded(
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       // School Name Row with Icon
-                    //       Row(
-                    //         children: [
-                    //           Icon(Icons.school, color: Colors.white, size: 20),
-                    //           SizedBox(width: 8),
-                    //           _isSchoolLoading? SizedBox(
-                    //             width: 24,
-                    //             height: 24,
-                    //             child: CircularProgressIndicator(
-                    //               color: isDarkMode ? Colors.black : Colors.white,
-                    //               strokeWidth: 2,
-                    //             ),
-                    //           ):Text(
-                    //             _schoolName,
-                    //             style: TextStyle(
-                    //               fontSize: 16,
-                    //               color: Colors.white,
-                    //               fontWeight: FontWeight.bold,
-                    //             ),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //       SizedBox(height: 5),
-                    //
-                    //       // School Status Text
-                    //       Text(
-                    //         "Status: School starts in 15 mins",
-                    //         style: TextStyle(fontSize: 14, color: Colors.white70),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
@@ -336,7 +301,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
                 onTap: (){
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => ScanToConnectSchool()),
+                    MaterialPageRoute(builder: (context) => ScanToConnectSchool(schoolName: _schoolName,)),
                   );
                 },
                 child: Stack(
@@ -391,3 +356,6 @@ class _DashboardscreenState extends State<Dashboardscreen> {
     );
   }
 }
+
+
+

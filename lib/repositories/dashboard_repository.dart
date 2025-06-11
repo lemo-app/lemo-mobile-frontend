@@ -84,5 +84,30 @@ class DashboardRepository{
     }
   }
 
+  Future<String> updateProfile(
+      String name,int age,String gender,String userId) async {
+    try {
+      final response = await _dataProvider.fetchData(
+        'PATCH',
+        '${Api.baseUrl}users/$userId',
+        data: {
+          'full_name': name,
+          'age': age,
+          'gender': gender
+        },
+      );
+
+      // Corrected Status Check for PATCH response
+      if (response?.statusCode == 200 || response?.statusCode == 204) {
+        return "Success";
+      }
+
+      return "Failed to retrieve";
+    } catch (e) {
+      print("Error ending session: $e");
+      return "Error ending session";
+    }
+  }
+
 
 }

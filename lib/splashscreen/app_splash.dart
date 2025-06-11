@@ -1,11 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:lemoios/splashscreen/terms_conditions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../authentication/login_screen.dart';
 import '../dashboard/DashboardScreen.dart';
-
 
 class AppSplash extends StatefulWidget {
   const AppSplash({super.key});
@@ -24,12 +22,14 @@ class _AppSplashState extends State<AppSplash> {
   }
 
   Future<void> _checkAuthAndNavigate() async {
-    await Future.delayed(const Duration(seconds: 3)); // Show splash for 3 seconds
+    await Future.delayed(
+        const Duration(seconds: 3)); // Show splash for 3 seconds
 
     if (!mounted) return;
 
     final prefs = await SharedPreferences.getInstance();
-    final bool isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true; // Default to true if not set
+    final bool isFirstLaunch =
+        prefs.getBool('isFirstLaunch') ?? true; // Default to true if not set
     final token = prefs.getString('token');
 
     if (isFirstLaunch) {
@@ -38,7 +38,8 @@ class _AppSplashState extends State<AppSplash> {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const TermsAndConditionScreen()),
+          MaterialPageRoute(
+              builder: (context) => const TermsAndConditionScreen()),
         );
       }
     } else if (token != null) {
@@ -60,7 +61,6 @@ class _AppSplashState extends State<AppSplash> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -80,7 +80,7 @@ class _AppSplashState extends State<AppSplash> {
                   // Faded Background Image
                   Positioned(
                     top: screenHeight * .05, // Adjust positioning
-                    child:  Opacity(
+                    child: Opacity(
                       opacity: 0.2, // Adjust opacity for fade effect
                       child: Image.asset(
                         'assets/images/background.png', // Replace with your background image
@@ -92,24 +92,45 @@ class _AppSplashState extends State<AppSplash> {
                   ),
                   // Foreground Image (Shield)
                   Positioned(
-                    top: 220, // Adjust positioning
-                    child: Image.asset(
-                      'assets/images/usershield.png',
-                      width: 120,
-                      height: 120,
+                    top: 180, // Adjust positioning
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/icon/icon.png',
+                        width: 120,
+                        height: 120,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
 
                   // Text Positioned Below the Shield
                   Positioned(
-                    top: 320, // Adjust this value to move text closer or farther
-                    child: Text(
-                      'LEMO',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: isDarkMode ? Colors.white : Colors.black,
-                      ),
+                    top: 320,
+                    child: Column(
+                      children: [
+                        Text(
+                          'LEMO',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: isDarkMode ? Colors.white : Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 40),
+                          child: Text(
+                            'Focus on learning, not distractions',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: isDarkMode
+                                  ? Colors.grey[300]
+                                  : Colors.grey[700],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -132,7 +153,9 @@ class _AppSplashState extends State<AppSplash> {
                           'v1.0.0',
                           style: TextStyle(
                             fontSize: 16,
-                            color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
+                            color: isDarkMode
+                                ? Colors.grey[400]
+                                : Colors.grey[700],
                           ),
                         ),
                       ],

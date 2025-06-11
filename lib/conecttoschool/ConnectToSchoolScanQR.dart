@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../dashboard/DashboardScreen.dart';
+import '../provider/learningmode_provider.dart';
 import 'QrScannerScreen.dart';
 
 
 class ScanToConnectSchool extends StatefulWidget {
-  const ScanToConnectSchool({super.key});
+  final String schoolName;
+  const ScanToConnectSchool({super.key, required this.schoolName});
 
   @override
   State<ScanToConnectSchool> createState() => _ScanToConnectSchoolState();
@@ -15,6 +18,10 @@ class _ScanToConnectSchoolState extends State<ScanToConnectSchool> {
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final learningModeProvider = Provider.of<LearningModeProvider>(
+      context,
+      listen: false,
+    );
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -46,8 +53,8 @@ class _ScanToConnectSchoolState extends State<ScanToConnectSchool> {
                 ),
               ),
               SizedBox(height: 20,),
-              const Text(
-                'Connect to School',
+              Text(
+                learningModeProvider.isLearningModeActive ? 'Scan To Disconnect': 'Scan To Connect',
                 style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
@@ -203,7 +210,7 @@ class _ScanToConnectSchoolState extends State<ScanToConnectSchool> {
                   ),
                   const SizedBox(width: 10),
                   Text(
-                    "St. Thomas' Moorside",
+                    widget.schoolName,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,

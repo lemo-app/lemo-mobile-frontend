@@ -1,4 +1,5 @@
   import 'package:flutter/material.dart';
+import 'package:lemoios/profilescreen/profile_edit_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../dashboard/model/school_model.dart';
@@ -17,11 +18,14 @@ class Profilescreen extends StatefulWidget {
 class _ProfilescreenState extends State<Profilescreen> {
   final AuthRepository _authRepository = AuthRepository();
   final DashboardRepository _dashboardRepository = DashboardRepository();
+  Student? student;
   bool _isLoading = false;
   bool _isSchoolLoading= false;
   String _name = "";
   String _email = "";
   String _schoolName = "";
+  String _logoUrl = "";
+  String _contactNumber = "";
 
   @override
   void initState() {
@@ -38,12 +42,13 @@ class _ProfilescreenState extends State<Profilescreen> {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     print("Tocken ${token}");
-    Student? student = await _authRepository.getProfileInfo(token!);
+    student = await _authRepository.getProfileInfo(token!);
     if (student != null) {
-      print('User Profile: ${student.email}, ${student.type}');
-      _name = student.fullname;
-      _email = student.email;
+      print('User Profile: ${student!.email}, ${student!.type}');
       setState(() {
+        _name = student!.fullname;
+        _email = student!.email;
+        _logoUrl = student!.avaterURl;
         _isLoading = false;
       });
     } else {
@@ -66,6 +71,7 @@ class _ProfilescreenState extends State<Profilescreen> {
       print('User School Profile: ${school.address}, ${school.schoolName}');
       setState(() {
         _schoolName = school.schoolName;
+        _contactNumber = school.contactNumber;
         _isSchoolLoading = false;
       });
     } else {
@@ -87,7 +93,7 @@ class _ProfilescreenState extends State<Profilescreen> {
             width: 24,
             height: 24,
             child: CircularProgressIndicator(
-              color: isDarkMode ? Colors.black : Colors.white,
+              color: isDarkMode ? Colors.white : Colors.black,
               strokeWidth: 2,
             ),
           ),
@@ -111,6 +117,12 @@ class _ProfilescreenState extends State<Profilescreen> {
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   _circularButton(Icons.edit, () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => EditProfileScreen(
+                        student: student,
+                      )),
+                    );
                     // Settings Action
                   },isDarkMode),
                 ],
@@ -121,10 +133,26 @@ class _ProfilescreenState extends State<Profilescreen> {
               Center(
                 child: Column(
                   children: [
-                    CircleAvatar(
+                    _logoUrl != '' ? CircleAvatar(
                       radius: 40,
-                      backgroundImage: NetworkImage(
-                        "https://randomuser.me/api/portraits/men/75.jpg", // Replace with actual image
+                      backgroundImage: NetworkImage(_logoUrl),
+                    ): Container(
+                      width: 80, // 2 * radius (to match CircleAvatar's size)
+                      height: 80,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.grey[300], // Background color for the circle
+                      ),
+                      child: Center(
+                        child: Text(
+                          _name.split(' ').map((name) => name.isNotEmpty ? name[0] : '').join(''), // Extracts "AS" from "Abrar School"
+                          style: TextStyle(
+                            fontSize: 24, // Larger font for initials
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black, // Text color
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
                     SizedBox(height: 10),
@@ -159,7 +187,7 @@ class _ProfilescreenState extends State<Profilescreen> {
               // Input Fields
               _inputField(Icons.person, "Full Name", _name,isDarkMode),
               SizedBox(height: 10),
-              _inputField(Icons.phone, "Phone Number", "+8801712653389",isDarkMode),
+              _inputField(Icons.phone, "Phone Number", _contactNumber,isDarkMode),
               SizedBox(height: 10),
               _inputField(Icons.email, "Email Address", _email,isDarkMode),
             ],
