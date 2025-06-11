@@ -167,29 +167,29 @@ class _ScanToConnectSchoolAfterRegisterState extends State<ScanToConnectSchoolAf
               ),
               const SizedBox(height: 60),
               // Row: Avatar + School Name
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
-                    child: const Icon(
-                      Icons.school,
-                      size: 24,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    "St. Thomas' Moorside",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: isDarkMode ? Colors.white : Colors.black,
-                    ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     CircleAvatar(
+              //       radius: 20,
+              //       backgroundColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+              //       child: const Icon(
+              //         Icons.school,
+              //         size: 24,
+              //         color: Colors.black,
+              //       ),
+              //     ),
+              //     const SizedBox(width: 10),
+              //     Text(
+              //       "St. Thomas' Moorside",
+              //       style: TextStyle(
+              //         fontSize: 18,
+              //         fontWeight: FontWeight.w500,
+              //         color: isDarkMode ? Colors.white : Colors.black,
+              //       ),
+              //     ),
+              //   ],
+              // ),
               //const Spacer(), // Pushes button to bottom
               SizedBox(height: 30,),
               // Next Button

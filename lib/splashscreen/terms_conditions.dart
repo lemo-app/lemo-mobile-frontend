@@ -49,11 +49,14 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
                   ),
                   // Foreground Image (Shield)
                   Positioned(
-                    top: 220, // Adjust positioning
-                    child: Image.asset(
-                      'assets/images/usershield.png',
-                      width: 120,
-                      height: 120,
+                    top: 180, // Adjust positioning
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/icon/icon.png',
+                        width: 120,
+                        height: 120,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
 

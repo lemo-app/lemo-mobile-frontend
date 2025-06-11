@@ -73,18 +73,18 @@
 class StudentDashboard {
   String id;
   String email;
-  String? accessToken;
-  String? refreshToken;
-  int? age;
-  String? gender;
-  String? section;
-  String? rollNo;
-  String? studentId;
-  String? type;
-  bool emailVerified;
-  DateTime createdAt;
-  DateTime updatedAt;
-  int v;
+  // String? accessToken;
+  // String? refreshToken;
+  // int? age;
+  // String? gender;
+  // String? section;
+  // String? rollNo;
+  // String? studentId;
+  // String? type;
+  // bool emailVerified;
+  // DateTime createdAt;
+  // DateTime updatedAt;
+  // int v;
   Schools school;
   // String fullName;
   // String? avatarUrl;
@@ -92,18 +92,18 @@ class StudentDashboard {
   StudentDashboard({
     required this.id,
     required this.email,
-    this.accessToken,
-    this.refreshToken,
-    this.age,
-    this.gender,
-    this.section,
-    this.rollNo,
-    this.studentId,
-    this.type,
-    required this.emailVerified,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.v,
+    // this.accessToken,
+    // this.refreshToken,
+    // this.age,
+    // this.gender,
+    // this.section,
+    // this.rollNo,
+    // this.studentId,
+    // this.type,
+    // required this.emailVerified,
+    // required this.createdAt,
+    // required this.updatedAt,
+    // required this.v,
     required this.school,
     // required this.fullName,
     // this.avatarUrl,
@@ -113,18 +113,18 @@ class StudentDashboard {
     return StudentDashboard(
       id: json['_id'] as String,
       email: json['email'] as String,
-      accessToken: json['accessToken'] as String?,
-      refreshToken: json['refreshToken'] as String?,
-      age: json['age'] as int?,
-      gender: json['gender'] as String?,
-      section: json['section'] as String?,
-      rollNo: json['roll_no'] as String?,
-      studentId: json['student_id'] as String?,
-      type: json['type'] as String?,
-      emailVerified: json['email_verified'] as bool,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
-      v: json['__v'] as int,
+      // accessToken: json['accessToken'] as String?,
+      // refreshToken: json['refreshToken'] as String?,
+      // age: json['age'] as int?,
+      // gender: json['gender'] as String?,
+      // section: json['section'] as String?,
+      // rollNo: json['roll_no'] as String?,
+      // studentId: json['student_id'] as String?,
+      // type: json['type'] as String?,
+      // emailVerified: json['email_verified'] as bool,
+      // createdAt: DateTime.parse(json['createdAt'] as String),
+      // updatedAt: DateTime.parse(json['updatedAt'] as String),
+      // v: json['__v'] as int,
       school: Schools.fromJson(json['school'] as Map<String, dynamic>),
       // fullName: json['full_name'] as String,
       // avatarUrl: json['avatar_url'] as String?,
@@ -135,18 +135,18 @@ class StudentDashboard {
     return {
       '_id': id,
       'email': email,
-      'accessToken': accessToken,
-      'refreshToken': refreshToken,
-      'age': age,
-      'gender': gender,
-      'section': section,
-      'roll_no': rollNo,
-      'student_id': studentId,
-      'type': type,
-      'email_verified': emailVerified,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-      '__v': v,
+      // 'accessToken': accessToken,
+      // 'refreshToken': refreshToken,
+      // 'age': age,
+      // 'gender': gender,
+      // 'section': section,
+      // 'roll_no': rollNo,
+      // 'student_id': studentId,
+      // 'type': type,
+      // 'email_verified': emailVerified,
+      // 'createdAt': createdAt.toIso8601String(),
+      // 'updatedAt': updatedAt.toIso8601String(),
+      // '__v': v,
       'school': school.toJson(),
       // 'full_name': fullName,
       // 'avatar_url': avatarUrl,
@@ -157,43 +157,46 @@ class StudentDashboard {
 class Schools {
   String id;
   String schoolName;
-  String address;
-  String description;
-  DateTime startTime;
-  DateTime endTime;
+  // String address;
+  // String description;
+  // DateTime startTime;
+  // DateTime endTime;
   String vpnConfigUrl;
-  DateTime createdAt;
-  DateTime updatedAt;
-  int v;
-  String qrUrl;
+  // DateTime createdAt;
+  // DateTime updatedAt;
+  // int v;
+  //String qrUrl;
+  String logoUrl;
 
   Schools({
     required this.id,
     required this.schoolName,
-    required this.address,
-    required this.description,
-    required this.startTime,
-    required this.endTime,
+    // required this.address,
+    // required this.description,
+    // required this.startTime,
+    // required this.endTime,
     required this.vpnConfigUrl,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.v,
-    required this.qrUrl,
+    // required this.createdAt,
+    // required this.updatedAt,
+    // required this.v,
+    // required this.qrUrl,
+    required this.logoUrl,
   });
 
   factory Schools.fromJson(Map<String, dynamic> json) {
     return Schools(
       id: json['_id'] as String,
       schoolName: json['school_name'] as String,
-      address: json['address'] as String,
-      description: json['description'] as String,
-      startTime: DateTime.parse(json['start_time'] as String),
-      endTime: DateTime.parse(json['end_time'] as String),
+      // address: json['address'] as String,
+      // description: json['description'] as String,
+      // startTime: DateTime.parse(json['start_time'] as String),
+      // endTime: DateTime.parse(json['end_time'] as String),
       vpnConfigUrl: json['vpn_config_url'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
-      v: json['__v'] as int,
-      qrUrl: json['qr_url'] as String,
+      // createdAt: DateTime.parse(json['createdAt'] as String),
+      // updatedAt: DateTime.parse(json['updatedAt'] as String),
+      // v: json['__v'] as int,
+      // qrUrl: json['qr_url'] as String,
+      logoUrl: json['logo_url'] ?? '',
     );
   }
 
@@ -201,15 +204,16 @@ class Schools {
     return {
       '_id': id,
       'school_name': schoolName,
-      'address': address,
-      'description': description,
-      'start_time': startTime.toIso8601String(),
-      'end_time': endTime.toIso8601String(),
+      // 'address': address,
+      // 'description': description,
+      // 'start_time': startTime.toIso8601String(),
+      // 'end_time': endTime.toIso8601String(),
       'vpn_config_url': vpnConfigUrl,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-      '__v': v,
-      'qr_url': qrUrl,
+      // 'createdAt': createdAt.toIso8601String(),
+      // 'updatedAt': updatedAt.toIso8601String(),
+      // '__v': v,
+      // 'qr_url': qrUrl,
+      'logo_url':logoUrl,
     };
   }
 }

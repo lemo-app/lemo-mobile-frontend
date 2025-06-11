@@ -28,6 +28,8 @@ class _SettingspageState extends State<Settingspage> {
 
   @override
   Widget build(BuildContext context) {
+    // Check if the app is in dark mode
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       //backgroundColor: Colors.white,
       body: SafeArea(
@@ -64,13 +66,13 @@ class _SettingspageState extends State<Settingspage> {
               SizedBox(height: 30),
 
               // General Section
-              _sectionTitle("General"),
+              _sectionTitle("General",isDarkMode?Colors.white:Colors.black12),
               _settingsItem("My Profile"),
               _settingsItem("Contact Us"),
               SizedBox(height: 20),
 
               // Security Section
-              _sectionTitle("Security"),
+              _sectionTitle("Security",isDarkMode?Colors.white:Colors.black12),
               _settingsItem("Change Password"),
               _settingsItem("Privacy Policy", subtitle: "Choose what data you share with us"),
               SizedBox(height: 20),
@@ -265,18 +267,19 @@ class _SettingspageState extends State<Settingspage> {
   }
 
   // Section Title Widget
-  Widget _sectionTitle(String title) {
+  Widget _sectionTitle(String title,Color color) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Text(
         title,
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54),
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color),
       ),
     );
   }
 
   // Settings Item Widget
   Widget _settingsItem(String title, {String? subtitle}) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -309,7 +312,7 @@ class _SettingspageState extends State<Settingspage> {
             padding: const EdgeInsets.only(bottom: 8),
             child: Text(
               subtitle,
-              style: TextStyle(fontSize: 13, color: Colors.black45),
+              style: TextStyle(fontSize: 13, color: isDarkMode?Colors.white:Colors.black45),
             ),
           ),
         Divider(height: 1, color: Colors.grey.shade300),

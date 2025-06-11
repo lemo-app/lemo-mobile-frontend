@@ -3,7 +3,6 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../authentication/login_screen.dart';
 
-
 class IntroSliderScreen extends StatefulWidget {
   const IntroSliderScreen({super.key});
 
@@ -15,29 +14,42 @@ class _IntroSliderScreenState extends State<IntroSliderScreen> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
 
-  final List<String> images = [
-    'assets/images/school_boy_reading.png',
-    'assets/images/school_boy_with_notebook.png',
-    'assets/images/girl_and_boy.png',
+  final List<Map<String, String>> slides = [
+    {
+      'image': 'assets/images/school_boy_reading.png',
+      'title': 'Focus on Learning',
+      'description':
+          'Lemo helps you stay focused during school hours by blocking distracting websites and apps.',
+    },
+    {
+      'image': 'assets/images/school_boy_with_notebook.png',
+      'title': 'Safe & Private',
+      'description':
+          'We don\'t store any of your data. Lemo only establishes a secure VPN connection to help you focus.',
+    },
+    {
+      'image': 'assets/images/girl_and_boy.png',
+      'title': 'Easy to Use',
+      'description':
+          'Simply scan your school\'s QR code to activate learning mode and stay focused on your studies.',
+    },
   ];
 
   void _nextImage() {
-    if (_currentIndex < images.length - 1) {
+    if (_currentIndex < slides.length - 1) {
       _currentIndex++;
       _pageController.animateToPage(
         _currentIndex,
         duration: Duration(milliseconds: 500),
         curve: Curves.easeInOut,
       );
-    }else{
-      // Navigate to NextScreen when last image is reached
+    } else {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => LoginScreen()),
       );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -48,21 +60,52 @@ class _IntroSliderScreenState extends State<IntroSliderScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            height: 350, // Image Carousel
+            height: 350,
             child: PageView.builder(
               controller: _pageController,
-              itemCount: images.length,
+              itemCount: slides.length,
               itemBuilder: (context, index) {
                 return AnimatedContainer(
                   duration: Duration(milliseconds: 500),
                   curve: Curves.easeInOut,
                   margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    image: DecorationImage(
-                      image: AssetImage(images[index]),
-                      fit: BoxFit.scaleDown,
-                    ),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 250,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          image: DecorationImage(
+                            image: AssetImage(slides[index]['image']!),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        slides[index]['title']!,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: isDarkMode ? Colors.white : Colors.black,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          slides[index]['description']!,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: isDarkMode
+                                ? Colors.grey[300]
+                                : Colors.grey[700],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 );
               },
@@ -71,7 +114,7 @@ class _IntroSliderScreenState extends State<IntroSliderScreen> {
           SizedBox(height: 12),
           SmoothPageIndicator(
             controller: _pageController,
-            count: images.length,
+            count: slides.length,
             effect: ExpandingDotsEffect(
               dotHeight: 8,
               dotWidth: 8,
@@ -80,35 +123,20 @@ class _IntroSliderScreenState extends State<IntroSliderScreen> {
             ),
           ),
           SizedBox(height: 20),
-          Text(
-            "Secure School Experience",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-              color: isDarkMode ? Colors.white : Colors.black,
-            ),
-          ),
-          SizedBox(height: 15),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Text(
-              "This app helps students stay focused on their studies by minimizing distractions and providing a secure environment.",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, color: isDarkMode ? Colors.white : Colors.black,),
-            ),
-          ),
-          SizedBox(height: 30),
           ElevatedButton(
             onPressed: _nextImage,
             style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-              backgroundColor:  Colors.blueAccent,
+              backgroundColor: Colors.blueAccent,
+              foregroundColor: Colors.white,
+              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(30),
               ),
             ),
-            child: Text("Next", style: TextStyle(fontSize: 18, color: Colors.white)),
+            child: Text(
+              _currentIndex == slides.length - 1 ? 'Get Started' : 'Next',
+              style: TextStyle(fontSize: 18),
+            ),
           ),
         ],
       ),
